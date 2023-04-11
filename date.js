@@ -1,6 +1,13 @@
-let date = new Date();
+// exports specific functions:
+// exports.getToday = getToday;
+// in app.js: let today = date.getToday();
+// exports.getNow = getNow;
+// in app.js: let now = date.getNow();
+// console.log(module);
 
-function getToday() {
+const date = new Date();
+
+exports.getToday = function () {
   // Current day 0-6
   let today = date.getDay();
   switch (today) {
@@ -31,15 +38,14 @@ function getToday() {
       break;
   }
   return today;
-}
+};
 
-function getNow() {
+exports.getNow = function () {
   // Current date
-  let options = {
+  const options = {
     weekday: "long",
     day: "numeric",
     month: "long",
   };
-  let now = date.toLocaleDateString("en-US", options);
-  return now;
-}
+  return (now = date.toLocaleDateString("en-US", options));
+};

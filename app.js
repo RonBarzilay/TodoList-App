@@ -14,13 +14,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Serve css, JS, files, assets etc. inside folder Public
 app.use(express.static("public"));
 
-let items = ["Buy Food", "Cook Food", "Eat Food"];
-let workListItems = [];
+const items = ["Buy Food", "Cook Food", "Eat Food"];
+const workListItems = [];
 
 app.get("/", function (req, res) {
   //   res.sendFile(__dirname + "/index.html"); ===
   //   EJS - send ejs file with dict of params
-  res.render("list", { listTitle: today, now: now, listOfItems: items });
+  res.render("list", {
+    listTitle: date.getToday(),
+    now: date.getNow(),
+    listOfItems: items,
+  });
 });
 
 app.post("/", function (req, res) {
@@ -37,7 +41,7 @@ app.post("/", function (req, res) {
 app.get("/work", function (req, res) {
   res.render("list", {
     listTitle: "Work List",
-    now: now,
+    now: date.getNow(),
     listOfItems: workListItems,
   });
 });
