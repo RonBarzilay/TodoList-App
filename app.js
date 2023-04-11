@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const date = require(__dirname + "/date.js");
 
 const app = express();
 
@@ -10,56 +11,37 @@ app.listen(3000, function () {
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
+// Serve css, JS, files, assets etc. inside folder Public
+app.use(express.static("public"));
 
-var items = ["Buy Food", "Cook Food", "Eat Food"];
-var date = new Date();
+let items = ["Buy Food", "Cook Food", "Eat Food"];
+let workListItems = [];
 
-// Current day 0-6
-var today = date.getDay();
-
-// Current date
-var options = {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-};
-var now = date.toLocaleDateString("en-US", options);
-switch (today) {
-  case 0:
-    today = "Sunday";
-    break;
-
-  case 1:
-    today = "Monday";
-    break;
-  case 2:
-    today = "Tuesday";
-    break;
-  case 3:
-    today = "Wednesday";
-    break;
-  case 4:
-    today = "Thursday";
-    break;
-  case 5:
-    today = "Friday";
-    break;
-  case 6:
-    today = "Satruday";
-    break;
-
-  default:
-    break;
-}
 app.get("/", function (req, res) {
-  //   res.sendFile(__dirname + "/index.html");
-  res.render("list", { day: today, now: now, listOfItems: items });
+  //   res.sendFile(__dirname + "/index.html"); ===
+  //   EJS - send ejs file with dict of params
+  res.render("list", { listTitle: today, now: now, listOfItems: items });
 });
 
 app.post("/", function (req, res) {
-  //   console.log(req.body.newItem);
-  //   var newItem = req.body.newItem;
-  //   res.render("list", { newItem: newItem });
-  items.push(req.body.newItem);
-  res.redirect("/");
+  let item = req.body.newItem;
+  if (req.body.list == "Work") {
+    workListItems.push(item);
+    res.redirect("/work");
+  } else {
+    items.push(item);
+    res.redirect("/");
+  }
+});
+
+app.get("/work", function (req, res) {
+  res.render("list", {
+    listTitle: "Work List",
+    now: now,
+    listOfItems: workListItems,
+  });
+});
+
+app.get("/about", function (req, res) {
+  res.render("about", {});
 });
